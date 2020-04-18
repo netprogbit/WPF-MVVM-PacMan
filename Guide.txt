@@ -1,0 +1,1 @@
+Do one-time build solution in order to plugins appear in the working folder.

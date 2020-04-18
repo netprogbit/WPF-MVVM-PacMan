@@ -1,0 +1,36 @@
+<Window x:Class="PacMan.Views.GameView"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:PacMan.Views"
+        mc:Ignorable="d"
+        Title="Pac-Man Game" 
+        MinHeight="450"
+        MinWidth="440"        
+        SizeToContent="WidthAndHeight"
+        Loaded="Window_Loaded">
+  <Window.Resources>
+    <local:SettingControl x:Key="settingControl"/>
+    <local:GameControl x:Key="gameControl"/>
+  </Window.Resources>
+  <Grid>
+    <StackPanel>
+      <Popup IsOpen="{Binding IsOpenPopup}" StaysOpen="False" Placement="Mouse" AllowsTransparency="True">
+        <Button Content="{Binding Message}" Command="{Binding PopupCancelCommand}" />
+      </Popup>
+      <ContentControl>
+        <ContentControl.Style>
+          <Style TargetType="{x:Type ContentControl}">
+            <Setter Property="Content" Value="{DynamicResource settingControl}"/>
+            <Style.Triggers>
+              <DataTrigger Binding="{Binding IsGameOver}" Value="False">
+                <Setter Property="Content" Value="{DynamicResource gameControl}"/>
+              </DataTrigger>
+            </Style.Triggers>
+          </Style>
+        </ContentControl.Style>
+      </ContentControl>
+    </StackPanel>
+  </Grid>
+</Window>

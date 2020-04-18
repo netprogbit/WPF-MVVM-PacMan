@@ -1,0 +1,83 @@
+﻿<UserControl x:Class="PacMan.Views.SettingControl"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:PacMan.Views"
+             mc:Ignorable="d" 
+             d:DesignHeight="450" d:DesignWidth="430">
+    <Grid Margin="5">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
+        <GroupBox Grid.Row="0" Header="Top Scorers" Margin="5" Padding="5">
+            <ListBox ItemsSource="{Binding TopScorers}" HorizontalContentAlignment="Stretch">
+                <ListBox.Template>
+                    <ControlTemplate>
+                        <DockPanel LastChildFill="True">
+                            <Grid DockPanel.Dock="Top" Height="30">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition/>
+                                    <ColumnDefinition/>
+                                </Grid.ColumnDefinitions>
+                                <Label Grid.Column="0">Name</Label>
+                                <Label Grid.Column="1">Score</Label>
+                            </Grid>
+                            <ItemsPresenter></ItemsPresenter>
+                        </DockPanel>
+                    </ControlTemplate>
+                </ListBox.Template>
+                <ListBox.ItemTemplate>
+                    <DataTemplate>
+                        <Grid Margin="0,2">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition/>
+                                <ColumnDefinition/>
+                            </Grid.ColumnDefinitions>
+                            <TextBox Text="{Binding Name}" Grid.Column="0"/>
+                            <TextBox Text="{Binding Score}" Grid.Column="1"/>
+                        </Grid>
+                    </DataTemplate>
+                </ListBox.ItemTemplate>
+            </ListBox>
+        </GroupBox>
+        <GroupBox Grid.Row="1" Header="Player"  Margin="5" Padding="5">
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition/>
+                    <ColumnDefinition/>
+                </Grid.ColumnDefinitions>
+                <Grid.RowDefinitions>
+                    <RowDefinition/>
+                    <RowDefinition/>
+                    <RowDefinition/>
+                    <RowDefinition/>
+                </Grid.RowDefinitions>
+                <TextBlock Grid.Column="0" Grid.Row="0" Text="Select Player" Margin="5"/>
+                <ComboBox Grid.Column="1" Grid.Row="0" DisplayMemberPath="Name" ItemsSource="{Binding Players}" SelectedItem="{Binding CurrentPlayer, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Margin="5"/>
+                <TextBlock Grid.Column="0" Grid.Row="1" Text="Player Score" Margin="5"/>
+                <TextBox Grid.Column="1" Grid.Row="1" Text="{Binding CurrentPlayer.Score}" IsReadOnly="True" Margin="5"/>
+                <TextBlock Grid.Column="0" Grid.Row="2" Text="New Player Name" Margin="5"/>
+                <TextBox Grid.Column="1" Grid.Row="2" Text="{Binding NewPlayerName, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Margin="5"/>
+                <StackPanel Grid.Column="0" Grid.Row="3" Grid.ColumnSpan="2" Orientation="Horizontal" HorizontalAlignment="Center">
+                    <Button Content="Add" Command="{Binding AddPlayerCommand}" Width="50" Margin="5"/>
+                    <Button Content="Delete" Command="{Binding DeletePlayerCommand}" Width="50" Margin="5"/>
+                </StackPanel>
+            </Grid>
+        </GroupBox>
+        <GroupBox Grid.Row="2" Header="Plugin" Margin="5" Padding="5">
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition/>
+                    <ColumnDefinition/>
+                </Grid.ColumnDefinitions>
+                <TextBlock Grid.Column="0" Text="Select Cast Plugin" Margin="5"/>
+                <ComboBox Grid.Column="1" DisplayMemberPath="Name" ItemsSource="{Binding Plugins}" SelectedItem="{Binding CurrentPlugin, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Margin="5"/>
+            </Grid>
+        </GroupBox>
+        <Button Grid.Row="3" Content="New Game" Command="{Binding NewGameCommand}" Width="80" Margin="5"/>
+    </Grid>
+</UserControl>
