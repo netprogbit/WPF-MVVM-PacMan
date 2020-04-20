@@ -1,10 +1,13 @@
 # WPF MVVM PacMan training project
 ## Used technologies:
 * WPF;
-* MVVM pattern;
+* MVVM;
 * SQLite;
-* Repository pattern;
-* UnitOfWork pattern;
+* Repository;
+* UnitOfWork;
+* Validation;
+* Global error handling;
+* NLog;
 * LINQ;
 * Plugin using MEF;
 * Unit testing;

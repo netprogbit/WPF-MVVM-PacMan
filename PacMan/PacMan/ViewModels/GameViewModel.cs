@@ -9,13 +9,14 @@ using System.Windows.Controls;
 using System.Windows.Input;
 using DataLayer.Entities;
 using System;
+using System.Linq;
 
 namespace PacMan.ViewModels
 {
   /// <summary>
   /// Layer beetwin game model and views
   /// </summary>
-  class GameViewModel : INotifyPropertyChanged
+  public class GameViewModel : INotifyPropertyChanged
   {
     private readonly GameModel _gameModel = new GameModel();
 
@@ -36,29 +37,27 @@ namespace PacMan.ViewModels
       set => _gameModel.CurrentPlugin = value;
     }
 
-    public ObservableCollection<Player> Players
+    public ObservableCollection<PlayerViewModel> TopScorers
     {
-      get => new ObservableCollection<Player>(_gameModel.Players);
-      set => _gameModel.Players = new List<Player>(value);
+      get => new ObservableCollection<PlayerViewModel>(_gameModel.TopScorers.Select(p => new PlayerViewModel { Id = p.Id, Name = p.Name, Score = p.Score }));
+      set => _gameModel.TopScorers = new List<Player>(value.Select(p => new Player { Id = p.Id, Name = p.Name, Score = p.Score }));
     }
 
-    public ObservableCollection<Player> TopScorers
+    private ObservableCollection<PlayerViewModel> _players;
+    public ObservableCollection<PlayerViewModel> Players
     {
-      get => new ObservableCollection<Player>(_gameModel.TopScorers);
-      set => _gameModel.TopScorers = new List<Player>(value);
+      get { _players = new ObservableCollection<PlayerViewModel>(_gameModel.Players.Select(p => new PlayerViewModel { Id = p.Id, Name = p.Name, Score = p.Score })); return _players; }
+      set => _gameModel.Players = new List<Player>(value.Select(p => new Player { Id = p.Id, Name = p.Name, Score = p.Score }));
+    }    
+
+    public PlayerViewModel CurrentPlayer
+    {
+      get => _players.SingleOrDefault(p => p.Id == _gameModel.CurrentPlayer?.Id);
+      set => _gameModel.CurrentPlayer = _gameModel.Players.SingleOrDefault(p => p.Id == value?.Id);
     }
 
-    public Player CurrentPlayer
-    {
-      get => _gameModel.CurrentPlayer;
-      set => _gameModel.CurrentPlayer = value;
-    }
-
-    public string NewPlayerName
-    {
-      get => _gameModel.NewPlayerName;
-      set => _gameModel.NewPlayerName = value;
-    }
+    private PlayerViewModel _newPlayer = new PlayerViewModel();
+    public PlayerViewModel NewPlayer { get => _newPlayer; set { _newPlayer = value; OnPropertyChanged(); } }
 
     public TimeSpan Time
     {
@@ -143,7 +142,8 @@ namespace PacMan.ViewModels
 
     private void AddPlayer()
     {
-      _gameModel.AddPlayer();
+      _gameModel.AddPlayer(_newPlayer.Name);
+      NewPlayer = new PlayerViewModel();
     }
 
     private void DeletePlayer()

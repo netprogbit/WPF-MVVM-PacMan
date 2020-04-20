@@ -29,10 +29,7 @@ namespace PacMan.Models
 
     private string _message;
     public string Message { get => _message; set { _message = value; OnPropertyChanged(); } }
-
-    private string _newPlayerName = string.Empty;
-    public string NewPlayerName { get => _newPlayerName; set { _newPlayerName = value; OnPropertyChanged(); } }
-
+    
     private TimeSpan _time;
     public TimeSpan Time { get => _time; set { _time = value; OnPropertyChanged(); } }
 
@@ -150,12 +147,12 @@ namespace PacMan.Models
       IsGameOver = true;
     }
 
-    public void AddPlayer()
+    public void AddPlayer(string name)
     {
       using (var unitOfWork = new UnitOfWork())
       {
         var players = unitOfWork.Players.GetAll();
-        Player player = new Player() { Name = _newPlayerName, Score = 0 };
+        Player player = new Player { Name = name };
 
         if (players.Any(p => p.Name == player.Name))
         {
@@ -165,18 +162,16 @@ namespace PacMan.Models
         {
           unitOfWork.Players.Create(player);
           unitOfWork.Save();
-          NewPlayerName = string.Empty;
+          PlayersInitialize(player.Id);
         }
-      }
-
-      PlayersInitialize();
+      }      
     }
 
     public void DeletePlayer()
     {
       using (var unitOfWork = new UnitOfWork())
       {
-        unitOfWork.Players.Delete(_currentPlayer.Id);
+        unitOfWork.Players.Delete(CurrentPlayer.Id);
         unitOfWork.Save();
       }
 
@@ -223,21 +218,24 @@ namespace PacMan.Models
       PluginsInitialize();
     }
 
-    private void PlayersInitialize()
+    private void PlayersInitialize(int playerId = 0)
     {
       using (var unitOfWork = new UnitOfWork())
-      {        
+      {
         Players = unitOfWork.Players.GetAll().ToList();
       }
 
       Players = Players.OrderByDescending(p => p.Score).ToList();
 
-      CurrentPlayer = Players[0];
+      if (playerId == 0)
+        CurrentPlayer = Players.FirstOrDefault();
+      else
+        CurrentPlayer = Players.SingleOrDefault(p => p.Id == playerId);
 
       TopScorers = new List<Player>(Players.Where((x, i) => i < 5)); // Top 5 Scorers list creating
     }
 
-    
+
 
     private void CanvasInitialize()
     {
@@ -329,9 +327,7 @@ namespace PacMan.Models
       }
 
       Time = Time.Subtract(pacManInterval);
-
       TakePlace(_pacMan.X, _pacMan.Y, Occupation.Empty); // Clearing place
-
       _pacMan.Move();
 
       bool isEaten = _pacMan.EatDot(_gameCanvas);
