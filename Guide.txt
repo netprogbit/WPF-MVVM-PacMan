@@ -1,1 +1,1 @@
-Do one-time build solution in order to plugins appear in the working folder.
+Do one-time build solution in order to plugins appear in the working folder. If there are errors then do rebuilding solution.

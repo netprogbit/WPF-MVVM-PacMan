@@ -91,6 +91,7 @@
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="Commands\RelayCommand.cs" />
+    <Compile Include="Converters\DeleteEnableConverter.cs" />
     <Compile Include="Converters\TitleIndexConverter.cs" />
     <Compile Include="Converters\ScoreIndexConverter.cs" />
     <Compile Include="Helpers\StringHelper.cs" />

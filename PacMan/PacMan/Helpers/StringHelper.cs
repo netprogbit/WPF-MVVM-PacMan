@@ -2,6 +2,7 @@ namespace PacMan.Helpers
 {
   public class StringHelper
   {
+    public static readonly string Title = "Pac-Man";
     public static readonly string Error = "Error";
     public static readonly string InternalAppError = "Internal application error.";
     public static readonly string NameRequired = "Name is required";
