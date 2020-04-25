@@ -31,11 +31,7 @@ namespace PacMan.ViewModels
       set => _gameModel.Plugins = new List<IMovableCost>(value);
     }
 
-    public IMovableCost CurrentPlugin
-    {
-      get => _gameModel.CurrentPlugin;
-      set => _gameModel.CurrentPlugin = value;
-    }
+    public IMovableCost CurrentPlugin { get => _gameModel.CurrentPlugin; set => _gameModel.CurrentPlugin = value; }
 
     public ObservableCollection<PlayerViewModel> TopScorers
     {
@@ -43,39 +39,22 @@ namespace PacMan.ViewModels
       set => _gameModel.TopScorers = new List<Player>(value.Select(p => new Player { Id = p.Id, Name = p.Name, Score = p.Score }));
     }
 
-    private ObservableCollection<PlayerViewModel> _players;
     public ObservableCollection<PlayerViewModel> Players
     {
-      get { _players = new ObservableCollection<PlayerViewModel>(_gameModel.Players.Select(p => new PlayerViewModel { Id = p.Id, Name = p.Name, Score = p.Score })); return _players; }
+      get => new ObservableCollection<PlayerViewModel>(_gameModel.Players.Select(p => new PlayerViewModel { Id = p.Id, Name = p.Name, Score = p.Score }));
       set => _gameModel.Players = new List<Player>(value.Select(p => new Player { Id = p.Id, Name = p.Name, Score = p.Score }));
-    }    
-
-    public PlayerViewModel CurrentPlayer
-    {
-      get => _players.SingleOrDefault(p => p.Id == _gameModel.CurrentPlayer?.Id);
-      set => _gameModel.CurrentPlayer = _gameModel.Players.SingleOrDefault(p => p.Id == value?.Id);
     }
+
+    public int SelectedPlayerIndex { get => _gameModel.SelectedPlayerIndex; set => _gameModel.SelectedPlayerIndex = value; }
 
     private PlayerViewModel _newPlayer = new PlayerViewModel();
     public PlayerViewModel NewPlayer { get => _newPlayer; set { _newPlayer = value; OnPropertyChanged(); } }
 
-    public TimeSpan Time
-    {
-      get => _gameModel.Time;
-      set => _gameModel.Time = value;
-    }
+    public TimeSpan Time { get => _gameModel.Time; set => _gameModel.Time = value; }
 
-    public int Score
-    {
-      get => _gameModel.Score;
-      set => _gameModel.Score = value;
-    }
+    public int Score { get => _gameModel.Score; set => _gameModel.Score = value; }
 
-    public string PlayPauseContent
-    {
-      get => _gameModel.PlayPauseContent;
-      set => _gameModel.PlayPauseContent = value;
-    }
+    public string PlayPauseContent { get => _gameModel.PlayPauseContent; set => _gameModel.PlayPauseContent = value; }
 
     public bool IsGameOver { get => _gameModel.IsGameOver; set => _gameModel.IsGameOver = value; }
 

@@ -1,14 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using Core.Enums;
 
 namespace Core.Abstractions
 {
-    public interface ICast : ICharacter
-    {
-        void Move(int pacManX, int pacManY);
-        bool TouchedPacMan(int pacManX, int pacManY);
-    }
+  public interface ICast : ICharacter
+  {
+    Occupation Owner { get; set; }
+    void Move(int pacManX, int pacManY);
+    bool TouchedPacMan(int pacManX, int pacManY);
+  }
 }

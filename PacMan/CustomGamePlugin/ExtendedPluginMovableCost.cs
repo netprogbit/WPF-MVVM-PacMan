@@ -22,7 +22,7 @@ namespace CustomGamePlugin
     public ExtendedPluginMovableCost([Import("matrix")] Occupation[,] matrix)
     {
       _matrix = matrix;
-      Name = "Extended cost movement";
+      Name = "Trial cost movement";
     }
 
     public Point Move(Point start, Point goal)

@@ -1,8 +1,6 @@
 using DataLayer.DbContexts;
 using DataLayer.Repositories;
 using System;
-using System.Data.Entity;
-using System.Threading.Tasks;
 
 namespace DataLayer
 {

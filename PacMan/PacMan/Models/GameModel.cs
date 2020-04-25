@@ -25,11 +25,8 @@ namespace PacMan.Models
   class GameModel : INotifyPropertyChanged
   {
     private Canvas _gameCanvas;
-    public Canvas GameCanvas { get => _gameCanvas; set { _gameCanvas = value; OnPropertyChanged(); } }
+    public Canvas GameCanvas { get => _gameCanvas; set { _gameCanvas = value; OnPropertyChanged(); } }    
 
-    private string _message;
-    public string Message { get => _message; set { _message = value; OnPropertyChanged(); } }
-    
     private TimeSpan _time;
     public TimeSpan Time { get => _time; set { _time = value; OnPropertyChanged(); } }
 
@@ -48,8 +45,8 @@ namespace PacMan.Models
     private List<Player> _topScorers;
     public List<Player> TopScorers { get => _topScorers; set { _topScorers = value; OnPropertyChanged(); } }
 
-    private Player _currentPlayer;
-    public Player CurrentPlayer { get => _currentPlayer; set { _currentPlayer = value; OnPropertyChanged(); } }
+    private int _selectedPlayerIndex;
+    public int SelectedPlayerIndex { get => _selectedPlayerIndex; set { _selectedPlayerIndex = value; OnPropertyChanged(); } }
 
     private bool _isGameOver = true;
     public bool IsGameOver { get => _isGameOver; set { _isGameOver = value; OnPropertyChanged(); } }
@@ -57,14 +54,13 @@ namespace PacMan.Models
     private string _playPauseContent = StringHelper.PlayString;
     public string PlayPauseContent { get => _playPauseContent; set { _playPauseContent = value; OnPropertyChanged(); } }
 
+    private string _message;
+    public string Message { get => _message; set { _message = value; OnPropertyChanged(); } }
+
     private readonly MazeFactory _mazeFactory = new MazeFactory();
-
     private readonly List<ICast> _casts = new List<ICast>();
-
     private Occupation[,] _matrix;
-
     private Services.Characters.PacMan _pacMan;
-
     private DispatcherTimer _timerPacMan;
     private DispatcherTimer _timerCasts;
 
@@ -139,39 +135,31 @@ namespace PacMan.Models
       Stop();
       GameCanvas.Children.Clear();
 
-      if (CurrentPlayer.Score < _score)
-        CurrentPlayer.Score = _score;
+      if (Players[SelectedPlayerIndex].Score < _score)
+        Players[SelectedPlayerIndex].Score = _score;
 
       UpdatePlayers(Players);
       Initialize();
       IsGameOver = true;
+      SendMessage(StringHelper.GameOver);
     }
 
     public void AddPlayer(string name)
     {
       using (var unitOfWork = new UnitOfWork())
       {
-        var players = unitOfWork.Players.GetAll();
         Player player = new Player { Name = name };
-
-        if (players.Any(p => p.Name == player.Name))
-        {
-          SendMessage(StringHelper.PlayerExistsString);
-        }
-        else
-        {
-          unitOfWork.Players.Create(player);
-          unitOfWork.Save();
-          PlayersInitialize(player.Id);
-        }
-      }      
+        unitOfWork.Players.Create(player);
+        unitOfWork.Save();
+        PlayersInitialize(player.Id);
+      }
     }
 
     public void DeletePlayer()
     {
       using (var unitOfWork = new UnitOfWork())
       {
-        unitOfWork.Players.Delete(CurrentPlayer.Id);
+        unitOfWork.Players.Delete(Players[SelectedPlayerIndex].Id);
         unitOfWork.Save();
       }
 
@@ -228,9 +216,9 @@ namespace PacMan.Models
       Players = Players.OrderByDescending(p => p.Score).ToList();
 
       if (playerId == 0)
-        CurrentPlayer = Players.FirstOrDefault();
+        SelectedPlayerIndex = 0;
       else
-        CurrentPlayer = Players.SingleOrDefault(p => p.Id == playerId);
+        SelectedPlayerIndex = Players.IndexOf(Players.SingleOrDefault(p => p.Id == playerId));
 
       TopScorers = new List<Player>(Players.Where((x, i) => i < 5)); // Top 5 Scorers list creating
     }
@@ -299,7 +287,7 @@ namespace PacMan.Models
     {
       foreach (var cast in _casts)
       {
-        TakePlace(cast.X, cast.Y, Occupation.Empty); // Clearing place
+        TakePlace(cast.X, cast.Y, cast.Owner); // Return place owner
         cast.Move(_pacMan.X, _pacMan.Y);
         TakePlace(_pacMan.X, _pacMan.Y, Occupation.Cast); // Taking place
 

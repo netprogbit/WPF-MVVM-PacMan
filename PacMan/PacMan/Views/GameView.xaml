@@ -4,8 +4,8 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:PacMan.Views"
-        mc:Ignorable="d"
-        Title="Pac-Man Game" 
+        xmlns:convertor="clr-namespace:PacMan.Converters"
+        mc:Ignorable="d"         
         MinHeight="450"
         MinWidth="440"        
         SizeToContent="WidthAndHeight"
@@ -13,7 +13,14 @@
   <Window.Resources>
     <local:SettingControl x:Key="settingControl"/>
     <local:GameControl x:Key="gameControl"/>
+    <convertor:TitleIndexConverter x:Key="titleIndexConverter" />
   </Window.Resources>
+  <Window.Title>
+    <MultiBinding Converter="{StaticResource titleIndexConverter}">
+      <Binding Path="SelectedPlayerIndex"/>
+      <Binding Path="Players" />
+    </MultiBinding>
+  </Window.Title>
   <Grid>
     <StackPanel>
       <Popup IsOpen="{Binding IsOpenPopup}" StaysOpen="False" Placement="Mouse" AllowsTransparency="True">
