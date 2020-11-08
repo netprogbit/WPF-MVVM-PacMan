@@ -210,17 +210,15 @@ namespace PacMan.Models
     {
       using (var unitOfWork = new UnitOfWork())
       {
-        Players = unitOfWork.Players.GetAll().ToList();
-      }
-
-      Players = Players.OrderByDescending(p => p.Score).ToList();
+        Players = unitOfWork.Players.FindAll().ToList();
+      }      
 
       if (playerId == 0)
         SelectedPlayerIndex = 0;
       else
         SelectedPlayerIndex = Players.IndexOf(Players.SingleOrDefault(p => p.Id == playerId));
 
-      TopScorers = new List<Player>(Players.Where((x, i) => i < 5)); // Top 5 Scorers list creating
+      TopScorers = Players.OrderByDescending(p => p.Score).Take(5).ToList(); // Top 5 Scorers list creating
     }
 
 

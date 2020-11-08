@@ -1,6 +1,7 @@
 using DataLayer.Abstractions;
 using DataLayer.DbContexts;
 using DataLayer.Entities;
+using System.Collections.Generic;
 using System.Data.Entity;
 using System.Linq;
 
@@ -18,12 +19,12 @@ namespace DataLayer.Repositories
       _db = db;
     }
 
-    public IQueryable<Player> GetAll()
+    public IEnumerable<Player> FindAll()
     {
-      return _db.Players;
+      return _db.Players.AsNoTracking().OrderBy(p => p.Name).ToList();
     }
 
-    public Player Get(int id)
+    public Player Find(int id)
     {
       return _db.Players.Find(id);
     }
