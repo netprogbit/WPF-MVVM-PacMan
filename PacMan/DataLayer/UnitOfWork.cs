@@ -1,4 +1,5 @@
 using DataLayer.DbContexts;
+using DataLayer.Entities;
 using DataLayer.Repositories;
 using System;
 
@@ -11,8 +12,8 @@ namespace DataLayer
   {
     private readonly GameDbContext _db = new GameDbContext();
     
-    private PlayerRepository _playerRepository;
-    public PlayerRepository Players => _playerRepository ?? (_playerRepository = new PlayerRepository(_db));
+    private IRepository<Player> _playerRepository;
+    public IRepository<Player> Players => _playerRepository ?? (_playerRepository = new PlayerRepository(_db));
     
     public void Save()
     {
